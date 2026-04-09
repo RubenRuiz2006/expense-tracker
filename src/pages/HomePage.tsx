@@ -3,8 +3,14 @@ import type { Gasto } from '../types/gasto'
 import GastoForm from '../components/GastoForm'
 import GastoList from '../components/GastoList'
 
-export default function HomePage() {
-  const [gastos, setGastos] = useState<Gasto[]>([])
+// Recibimos los gastos y setGastos desde App.tsx
+interface Props {
+  gastos: Gasto[]
+  setGastos: (gastos: Gasto[]) => void
+}
+
+export default function HomePage({ gastos, setGastos }: Props) {
+  // Solo guardamos aquí el gasto que se está editando
   const [gastoEditar, setGastoEditar] = useState<Gasto | undefined>(undefined)
 
   function handleGuardar(gasto: Gasto) {
