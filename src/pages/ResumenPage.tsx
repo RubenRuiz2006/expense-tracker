@@ -1,19 +1,15 @@
 import { useMemo } from 'react'
-import type { Gasto, Categoria } from '../types/gasto'
+import type { Categoria } from '../types/gasto'
+import { useGastosContext } from '../context/GastosContext'
 import ResumenCard from '../components/ResumenCard'
-
-interface Props {
-  gastos: Gasto[]
-}
 
 const categorias: Categoria[] = ['comida', 'transporte', 'ocio', 'ropa', 'salud', 'otros']
 
-export default function ResumenPage({ gastos }: Props) {
+export default function ResumenPage() {
+  // Cogemos los gastos directamente del contexto — sin props
+  const { gastos } = useGastosContext()
 
-  // useMemo guarda el resultado en memoria y solo recalcula cuando gastos cambia
   const totalesPorCategoria = useMemo(() => {
-
-    // Creamos un objeto con todas las categorías a cero
     const totales: Record<Categoria, number> = {
       comida: 0,
       transporte: 0,
@@ -23,29 +19,20 @@ export default function ResumenPage({ gastos }: Props) {
       otros: 0,
     }
 
-    // Recorremos cada gasto y sumamos su cantidad a la categoría correspondiente
     for (let i = 0; i < gastos.length; i++) {
       const gasto = gastos[i]
-      const categoriaDelGasto = gasto.categoria
-      const cantidadActual = totales[categoriaDelGasto]
-      totales[categoriaDelGasto] = cantidadActual + gasto.cantidad
+      totales[gasto.categoria] = totales[gasto.categoria] + gasto.cantidad
     }
 
     return totales
-
   }, [gastos])
 
-  // Sumamos todos los gastos para el total general
   const totalGeneral = useMemo(() => {
     let total = 0
-
     for (let i = 0; i < gastos.length; i++) {
-      const gasto = gastos[i]
-      total = total + gasto.cantidad
+      total = total + gastos[i].cantidad
     }
-
     return total
-
   }, [gastos])
 
   return (

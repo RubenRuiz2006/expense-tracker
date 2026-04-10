@@ -1,19 +1,16 @@
 import { useState } from 'react'
 import type { Gasto } from '../types/gasto'
+import { useGastosContext } from '../context/GastosContext'
 import GastoForm from '../components/GastoForm'
 import GastoList from '../components/GastoList'
 
-interface Props {
-  gastos: Gasto[]
-  onGuardar: (gasto: Gasto) => void
-  onEliminar: (id: string) => void
-}
-
-export default function HomePage({ gastos, onGuardar, onEliminar }: Props) {
+export default function HomePage() {
+  // Cogemos los datos directamente del contexto — sin props
+  const { gastos, guardarGasto, eliminarGasto } = useGastosContext()
   const [gastoEditar, setGastoEditar] = useState<Gasto | undefined>(undefined)
 
   function handleGuardar(gasto: Gasto) {
-    onGuardar(gasto)
+    guardarGasto(gasto)
     setGastoEditar(undefined)
   }
 
@@ -26,7 +23,7 @@ export default function HomePage({ gastos, onGuardar, onEliminar }: Props) {
       <GastoForm onGuardar={handleGuardar} gastoEditar={gastoEditar} />
       <GastoList
         gastos={gastos}
-        onEliminar={onEliminar}
+        onEliminar={eliminarGasto}
         onEditar={handleEditar}
       />
     </div>
