@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import type { Gasto, Categoria } from '../types/gasto'
 import ResumenCard from '../components/ResumenCard'
 
@@ -8,26 +9,44 @@ interface Props {
 const categorias: Categoria[] = ['comida', 'transporte', 'ocio', 'ropa', 'salud', 'otros']
 
 export default function ResumenPage({ gastos }: Props) {
-  function calcularTotal(categoria: Categoria) {
-    const gastosDeLaCategoria = gastos.filter((g) => {
-      if (g.categoria === categoria) {
-        return true
-      } else {
-        return false
-      }
-    })
 
+  // useMemo guarda el resultado en memoria y solo recalcula cuando gastos cambia
+  const totalesPorCategoria = useMemo(() => {
+
+    // Creamos un objeto con todas las categorías a cero
+    const totales: Record<Categoria, number> = {
+      comida: 0,
+      transporte: 0,
+      ocio: 0,
+      ropa: 0,
+      salud: 0,
+      otros: 0,
+    }
+
+    // Recorremos cada gasto y sumamos su cantidad a la categoría correspondiente
+    for (let i = 0; i < gastos.length; i++) {
+      const gasto = gastos[i]
+      const categoriaDelGasto = gasto.categoria
+      const cantidadActual = totales[categoriaDelGasto]
+      totales[categoriaDelGasto] = cantidadActual + gasto.cantidad
+    }
+
+    return totales
+
+  }, [gastos])
+
+  // Sumamos todos los gastos para el total general
+  const totalGeneral = useMemo(() => {
     let total = 0
-    gastosDeLaCategoria.forEach((g) => {
-      total = total + g.cantidad
-    })
+
+    for (let i = 0; i < gastos.length; i++) {
+      const gasto = gastos[i]
+      total = total + gasto.cantidad
+    }
 
     return total
-  }
 
-  const totalGeneral = gastos.reduce((acumulado, g) => {
-    return acumulado + g.cantidad
-  }, 0)
+  }, [gastos])
 
   return (
     <div className="max-w-2xl mx-auto p-6 flex flex-col gap-4">
@@ -38,7 +57,7 @@ export default function ResumenPage({ gastos }: Props) {
           <ResumenCard
             key={categoria}
             categoria={categoria}
-            total={calcularTotal(categoria)}
+            total={totalesPorCategoria[categoria]}
           />
         ))}
       </div>
