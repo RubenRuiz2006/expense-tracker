@@ -3,73 +3,113 @@ import type { Gasto, Categoria } from '../types/gasto'
 
 interface Props {
   onGuardar: (gasto: Gasto) => void
-  gastoEditar?: Gasto  // opcional — si llega, entramos en modo edición
+  gastoEditar?: Gasto
 }
 
-// Lista de categorías disponibles para el select
 const categorias: Categoria[] = ['comida', 'transporte', 'ocio', 'ropa', 'salud', 'otros']
 
 export default function GastoForm({ onGuardar, gastoEditar }: Props) {
-  // Estado de cada campo del formulario
   const [cantidad, setCantidad] = useState('')
   const [categoria, setCategoria] = useState<Categoria>('comida')
   const [fecha, setFecha] = useState('')
   const [descripcion, setDescripcion] = useState('')
 
-  // Cuando llega un gasto a editar, rellenamos los campos con sus datos
+  // Guardamos los errores de cada campo
+  const [errores, setErrores] = useState({
+    cantidad: '',
+    fecha: '',
+  })
+
   useEffect(() => {
     if (gastoEditar) {
-      setCantidad(String(gastoEditar.cantidad))  // convertimos el número a texto para el input
+      setCantidad(String(gastoEditar.cantidad))
       setCategoria(gastoEditar.categoria)
       setFecha(gastoEditar.fecha)
-      setDescripcion(gastoEditar.descripcion ?? '')  // si no tiene descripción usamos texto vacío
+      setDescripcion(gastoEditar.descripcion ? gastoEditar.descripcion : '')
     }
-  }, [gastoEditar])  // se ejecuta cada vez que gastoEditar cambia
+  }, [gastoEditar])
+
+  function validar() {
+    // Creamos un objeto con los errores encontrados
+    const erroresNuevos = {
+      cantidad: '',
+      fecha: '',
+    }
+
+    let hayErrores = false
+
+    // Comprobamos que la cantidad no está vacía
+    if (cantidad === '') {
+      erroresNuevos.cantidad = 'La cantidad es obligatoria'
+      hayErrores = true
+    }
+
+    // Comprobamos que la cantidad es un número mayor que cero
+    if (Number(cantidad) <= 0) {
+      erroresNuevos.cantidad = 'La cantidad tiene que ser mayor que cero'
+      hayErrores = true
+    }
+
+    // Comprobamos que la fecha no está vacía
+    if (fecha === '') {
+      erroresNuevos.fecha = 'La fecha es obligatoria'
+      hayErrores = true
+    }
+
+    // Guardamos los errores para mostrarlos en pantalla
+    setErrores(erroresNuevos)
+
+    // Devolvemos true si no hay errores, false si hay alguno
+    return !hayErrores
+  }
 
   function handleSubmit(e: React.FormEvent) {
-    // Evitamos que el formulario recargue la página al enviarse
     e.preventDefault()
 
-    // Construimos el objeto gasto con los valores actuales de los campos
+    // Si hay errores no seguimos
+    if (!validar()) {
+      return
+    }
+
     const gasto: Gasto = {
-      // Si estamos editando mantenemos el id original, si es nuevo generamos uno
       id: gastoEditar ? gastoEditar.id : crypto.randomUUID(),
-      cantidad: Number(cantidad),  // convertimos el texto del input a número
+      cantidad: Number(cantidad),
       categoria,
       fecha,
-      // Si la descripción está vacía guardamos undefined, si no guardamos el texto
       descripcion: descripcion ? descripcion : undefined,
     }
 
-    // Pasamos el gasto al componente padre
     onGuardar(gasto)
-
-    // Limpiamos el formulario para dejarlo listo para el siguiente gasto
     setCantidad('')
     setCategoria('comida')
     setFecha('')
     setDescripcion('')
+    setErrores({ cantidad: '', fecha: '' })
   }
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-3 bg-white p-6 rounded-lg shadow">
-      
-      {/* El título cambia según si estamos editando o creando */}
+
       <h2 className="text-lg font-bold">
         {gastoEditar ? 'Editar gasto' : 'Nuevo gasto'}
       </h2>
 
-      {/* Input de cantidad */}
-      <input
-        type="number"
-        placeholder="Cantidad €"
-        value={cantidad}
-        onChange={(e) => setCantidad(e.target.value)}
-        className="border rounded p-2"
-        required
-      />
+      {/* Campo cantidad */}
+      <div className="flex flex-col gap-1">
+        <input
+          type="number"
+          placeholder="Cantidad €"
+          value={cantidad}
+          onChange={(e) => setCantidad(e.target.value)}
+          className="border rounded p-2"
+        />
+        {/* Si hay error en cantidad lo mostramos en rojo */}
+        {errores.cantidad !== '' && (
+          <p className="text-red-500 text-sm">{errores.cantidad}</p>
+        )}
+      </div>
 
-      {/* Select de categoría — genera una opción por cada categoría de la lista */}
+      {/* Campo categoría */}
       <select
         value={categoria}
         onChange={(e) => setCategoria(e.target.value as Categoria)}
@@ -80,16 +120,21 @@ export default function GastoForm({ onGuardar, gastoEditar }: Props) {
         ))}
       </select>
 
-      {/* Input de fecha */}
-      <input
-        type="date"
-        value={fecha}
-        onChange={(e) => setFecha(e.target.value)}
-        className="border rounded p-2"
-        required
-      />
+      {/* Campo fecha */}
+      <div className="flex flex-col gap-1">
+        <input
+          type="date"
+          value={fecha}
+          onChange={(e) => setFecha(e.target.value)}
+          className="border rounded p-2"
+        />
+        {/* Si hay error en fecha lo mostramos en rojo */}
+        {errores.fecha !== '' && (
+          <p className="text-red-500 text-sm">{errores.fecha}</p>
+        )}
+      </div>
 
-      {/* Input de descripción — no es obligatorio */}
+      {/* Campo descripción — opcional */}
       <input
         type="text"
         placeholder="Descripción (opcional)"
@@ -98,7 +143,6 @@ export default function GastoForm({ onGuardar, gastoEditar }: Props) {
         className="border rounded p-2"
       />
 
-      {/* El botón también cambia su texto según el modo */}
       <button
         type="submit"
         className="bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
