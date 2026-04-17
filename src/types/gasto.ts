@@ -1,4 +1,4 @@
-export type Categoria = "comida"| "ocio"| "ropa"| "transporte"| "salud"| "otros"
+export type Categoria = "Comida"| "Ocio"| "Ropa"| "Transporte"| "Salud"| "Otros"
 
 export interface Gasto {
     id: string

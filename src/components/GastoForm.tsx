@@ -6,11 +6,11 @@ interface Props {
   gastoEditar?: Gasto
 }
 
-const categorias: Categoria[] = ['comida', 'transporte', 'ocio', 'ropa', 'salud', 'otros']
+const categorias: Categoria[] = ['Comida', 'Transporte', 'Ocio', 'Ropa', 'Salud', 'Otros']
 
 export default function GastoForm({ onGuardar, gastoEditar }: Props) {
   const [cantidad, setCantidad] = useState('')
-  const [categoria, setCategoria] = useState<Categoria>('comida')
+  const [categoria, setCategoria] = useState<Categoria>('Comida')
   const [fecha, setFecha] = useState('')
   const [descripcion, setDescripcion] = useState('')
 
@@ -81,7 +81,7 @@ export default function GastoForm({ onGuardar, gastoEditar }: Props) {
 
     onGuardar(gasto)
     setCantidad('')
-    setCategoria('comida')
+    setCategoria('Comida')
     setFecha('')
     setDescripcion('')
     setErrores({ cantidad: '', fecha: '' })
