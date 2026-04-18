@@ -1,6 +1,6 @@
 import type { Gasto } from '../types/gasto'
 
-const URL_BASE = 'http://localhost:3000/api/v1/gastos'
+const URL_BASE = 'https://expense-tracker-xxhn.vercel.app/'
 
 // Obtiene todos los gastos del servidor
 async function obtenerGastos(): Promise<Gasto[]> {
