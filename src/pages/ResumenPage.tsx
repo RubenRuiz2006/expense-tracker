@@ -3,7 +3,7 @@ import type { Categoria } from '../types/gasto'
 import { useGastosContext } from '../context/GastosContext'
 import ResumenCard from '../components/ResumenCard'
 
-const categorias: Categoria[] = ['comida', 'transporte', 'ocio', 'ropa', 'salud', 'otros']
+const categorias: Categoria[] = ['Comida', 'Transporte', 'Ocio', 'Ropa', 'Salud', 'Otros']
 
 export default function ResumenPage() {
   // Cogemos los gastos directamente del contexto — sin props
@@ -11,12 +11,12 @@ export default function ResumenPage() {
 
   const totalesPorCategoria = useMemo(() => {
     const totales: Record<Categoria, number> = {
-      comida: 0,
-      transporte: 0,
-      ocio: 0,
-      ropa: 0,
-      salud: 0,
-      otros: 0,
+      Comida: 0,
+      Transporte: 0,
+      Ocio: 0,
+      Ropa: 0,
+      Salud: 0,
+      Otros: 0,
     }
 
     for (let i = 0; i < gastos.length; i++) {
