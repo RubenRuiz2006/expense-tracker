@@ -6,11 +6,10 @@ interface Props {
 }
 
 export default function GastosProvider({ children }: Props) {
-  // Usamos el hook que ya teníamos para tener los gastos y las funciones
-  const { gastos, guardarGasto, eliminarGasto } = useGastos()
+  const { gastos, guardarGasto, eliminarGasto, cargando, error } = useGastos()
 
   return (
-    <GastosContext.Provider value={{ gastos, guardarGasto, eliminarGasto }}>
+    <GastosContext.Provider value={{ gastos, guardarGasto, eliminarGasto, cargando, error }}>
       {children}
     </GastosContext.Provider>
   )

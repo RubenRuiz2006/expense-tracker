@@ -5,8 +5,7 @@ import GastoForm from '../components/GastoForm'
 import GastoList from '../components/GastoList'
 
 export default function HomePage() {
-  // Cogemos los datos directamente del contexto — sin props
-  const { gastos, guardarGasto, eliminarGasto } = useGastosContext()
+  const { gastos, guardarGasto, eliminarGasto, cargando, error } = useGastosContext()
   const [gastoEditar, setGastoEditar] = useState<Gasto | undefined>(undefined)
 
   function handleGuardar(gasto: Gasto) {
@@ -16,6 +15,16 @@ export default function HomePage() {
 
   function handleEditar(gasto: Gasto) {
     setGastoEditar(gasto)
+  }
+
+  // Mientras carga mostramos un mensaje
+  if (cargando) {
+    return <p className="text-center text-gray-400 mt-8">Cargando gastos...</p>
+  }
+
+  // Si hay error lo mostramos
+  if (error) {
+    return <p className="text-center text-red-500 mt-8">{error}</p>
   }
 
   return (
