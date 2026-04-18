@@ -126,6 +126,10 @@ export default function GastoForm({ onGuardar, gastoEditar }: Props) {
           type="date"
           value={fecha}
           onChange={(e) => setFecha(e.target.value)}
+          onKeyDown={(e) => {
+    if (e.key === 'e' || e.key === 'E' || e.key === '-' || e.key === '+') {
+      e.preventDefault()
+    }}}
           className="border rounded p-2"
         />
         {/* Si hay error en fecha lo mostramos en rojo */}
