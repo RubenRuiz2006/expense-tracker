@@ -10,16 +10,16 @@ export default function Navbar() {
       {enResumen ? (
         <Link
           to="/"
-          className="bg-white text-blue-600 px-4 py-2 rounded font-medium hover:bg-blue-50"
+          className="border border-white/60 text-white px-4 py-1.5 rounded-full text-sm font-medium hover:bg-white/15 hover:border-white transition-all"
         >
-          Ver gastos
+          ← Ver gastos
         </Link>
       ) : (
         <Link
           to="/resumen"
-          className="bg-white text-blue-600 px4 py-2 rounded font-medium hover:bg-blue-50"
+          className="border border-white/60 text-white px-4 py-1.5 rounded-full text-sm font-medium hover:bg-white/15 hover:border-white transition-all"
         >
-          Ver resumen
+          Ver resumen →
         </Link>
       )}
     </nav>
