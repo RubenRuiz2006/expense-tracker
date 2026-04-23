@@ -1,4 +1,4 @@
-import type { Gasto } from "../types/gasto"
+import type { Gasto } from '../types/gasto'
 
 interface Props {
   gasto: Gasto
@@ -6,42 +6,54 @@ interface Props {
   onEditar: (gasto: Gasto) => void
 }
 
-export default function GastoItem({ gasto, onEliminar, onEditar }: Props) {
+const coloresCategorias: Record<string, string> = {
+  comida: 'bg-blue-50 text-blue-800',
+  transporte: 'bg-green-50 text-green-800',
+  ocio: 'bg-purple-50 text-purple-800',
+  ropa: 'bg-pink-50 text-pink-800',
+  salud: 'bg-teal-50 text-teal-800',
+  otros: 'bg-gray-100 text-gray-700',
+}
 
-  // Función que se ejecuta cuando el usuario hace clic en editar
+export default function GastoItem({ gasto, onEliminar, onEditar }: Props) {
   function handleEditar() {
     onEditar(gasto)
   }
 
-  // Función que se ejecuta cuando el usuario hace clic en eliminar
   function handleEliminar() {
     onEliminar(gasto.id)
   }
 
-  // Comprobamos si el gasto tiene descripción para mostrarla o no
+  const colorCategoria = coloresCategorias[gasto.categoria] || coloresCategorias.otros
+
   let descripcion = null
   if (gasto.descripcion) {
-    descripcion = <p className="text-sm text-gray-600">{gasto.descripcion}</p>
+    descripcion = <span className="text-xs text-gray-400"> · {gasto.descripcion}</span>
   }
 
   return (
-    <div className="flex justify-between items-center bg-white p-4 rounded-lg shadow">
-      <div>
-        <span className="font-bold text-lg">{gasto.cantidad}€</span>
-        <span className="ml-2 text-gray-500 capitalize">{gasto.categoria}</span>
-        <p className="text-sm text-gray-400">{gasto.fecha}</p>
-        {descripcion}
+    <div className="bg-white rounded-xl border border-gray-100 px-5 py-4 flex justify-between items-center">
+      <div className="flex flex-col gap-1">
+        <div className="flex items-center gap-2">
+          <span className="text-base font-medium text-gray-900">{gasto.cantidad.toFixed(2)} €</span>
+          <span className={`text-xs px-2 py-0.5 rounded-full font-medium capitalize ${colorCategoria}`}>
+            {gasto.categoria}
+          </span>
+        </div>
+        <span className="text-xs text-gray-400">
+          {gasto.fecha}{descripcion}
+        </span>
       </div>
       <div className="flex gap-2">
         <button
           onClick={handleEditar}
-          className="bg-yellow-400 text-white px-3 py-1 rounded hover:bg-yellow-500"
+          className="border border-gray-200 text-gray-500 px-3 py-1.5 rounded-lg text-xs hover:bg-gray-50 transition-all"
         >
           Editar
         </button>
         <button
           onClick={handleEliminar}
-          className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+          className="border border-red-200 text-red-500 px-3 py-1.5 rounded-lg text-xs hover:bg-red-50 transition-all"
         >
           Eliminar
         </button>

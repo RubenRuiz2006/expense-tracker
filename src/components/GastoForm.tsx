@@ -13,12 +13,7 @@ export default function GastoForm({ onGuardar, gastoEditar }: Props) {
   const [categoria, setCategoria] = useState<Categoria>('Comida')
   const [fecha, setFecha] = useState('')
   const [descripcion, setDescripcion] = useState('')
-
-  // Guardamos los errores de cada campo
-  const [errores, setErrores] = useState({
-    cantidad: '',
-    fecha: '',
-  })
+  const [errores, setErrores] = useState({ cantidad: '', fecha: '' })
 
   useEffect(() => {
     if (gastoEditar) {
@@ -30,46 +25,29 @@ export default function GastoForm({ onGuardar, gastoEditar }: Props) {
   }, [gastoEditar])
 
   function validar() {
-    // Creamos un objeto con los errores encontrados
-    const erroresNuevos = {
-      cantidad: '',
-      fecha: '',
-    }
-
+    const erroresNuevos = { cantidad: '', fecha: '' }
     let hayErrores = false
 
-    // Comprobamos que la cantidad no está vacía
     if (cantidad === '') {
       erroresNuevos.cantidad = 'La cantidad es obligatoria'
       hayErrores = true
     }
-
-    // Comprobamos que la cantidad es un número mayor que cero
     if (Number(cantidad) <= 0) {
       erroresNuevos.cantidad = 'La cantidad tiene que ser mayor que cero'
       hayErrores = true
     }
-
-    // Comprobamos que la fecha no está vacía
     if (fecha === '') {
       erroresNuevos.fecha = 'La fecha es obligatoria'
       hayErrores = true
     }
 
-    // Guardamos los errores para mostrarlos en pantalla
     setErrores(erroresNuevos)
-
-    // Devolvemos true si no hay errores, false si hay alguno
     return !hayErrores
   }
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-
-    // Si hay errores no seguimos
-    if (!validar()) {
-      return
-    }
+    if (!validar()) return
 
     const gasto: Gasto = {
       id: gastoEditar ? gastoEditar.id : crypto.randomUUID(),
@@ -88,72 +66,75 @@ export default function GastoForm({ onGuardar, gastoEditar }: Props) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-3 bg-white p-6 rounded-lg shadow">
-
-      <h2 className="text-lg font-bold">
+    <form onSubmit={handleSubmit} className="bg-white rounded-xl border border-gray-100 p-5 flex flex-col gap-4">
+      <p className="text-xs font-medium text-gray-400 uppercase tracking-wider">
         {gastoEditar ? 'Editar gasto' : 'Nuevo gasto'}
-      </h2>
+      </p>
 
-      {/* Campo cantidad */}
-      <div className="flex flex-col gap-1">
-        <input
-          type="number"
-          placeholder="Cantidad €"
-          value={cantidad}
-          onChange={(e) => setCantidad(e.target.value)}
-          className="border rounded p-2"
-        />
-        {/* Si hay error en cantidad lo mostramos en rojo */}
-        {errores.cantidad !== '' && (
-          <p className="text-red-500 text-sm">{errores.cantidad}</p>
-        )}
+      <div className="grid grid-cols-2 gap-3">
+        <div className="flex flex-col gap-1">
+          <label className="text-xs text-gray-500">Cantidad</label>
+          <input
+            type="number"
+            placeholder="0.00"
+            value={cantidad}
+            onChange={(e) => setCantidad(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'e' || e.key === 'E' || e.key === '-' || e.key === '+') {
+                e.preventDefault()
+              }
+            }}
+            className="border border-gray-200 rounded-lg px-3 py-2 text-sm bg-gray-50 focus:outline-none focus:border-blue-400"
+          />
+          {errores.cantidad !== '' && (
+            <p className="text-xs text-red-500">{errores.cantidad}</p>
+          )}
+        </div>
+
+        <div className="flex flex-col gap-1">
+          <label className="text-xs text-gray-500">Categoría</label>
+          <select
+            value={categoria}
+            onChange={(e) => setCategoria(e.target.value as Categoria)}
+            className="border border-gray-200 rounded-lg px-3 py-2 text-sm bg-gray-50 focus:outline-none focus:border-blue-400 capitalize"
+          >
+            {categorias.map((cat) => (
+              <option key={cat} value={cat}>{cat}</option>
+            ))}
+          </select>
+        </div>
+
+        <div className="flex flex-col gap-1">
+          <label className="text-xs text-gray-500">Fecha</label>
+          <input
+            type="date"
+            value={fecha}
+            onChange={(e) => setFecha(e.target.value)}
+            className="border border-gray-200 rounded-lg px-3 py-2 text-sm bg-gray-50 focus:outline-none focus:border-blue-400"
+          />
+          {errores.fecha !== '' && (
+            <p className="text-xs text-red-500">{errores.fecha}</p>
+          )}
+        </div>
+
+        <div className="flex flex-col gap-1">
+          <label className="text-xs text-gray-500">Descripción</label>
+          <input
+            type="text"
+            placeholder="Opcional"
+            value={descripcion}
+            onChange={(e) => setDescripcion(e.target.value)}
+            className="border border-gray-200 rounded-lg px-3 py-2 text-sm bg-gray-50 focus:outline-none focus:border-blue-400"
+          />
+        </div>
       </div>
-
-      {/* Campo categoría */}
-      <select
-        value={categoria}
-        onChange={(e) => setCategoria(e.target.value as Categoria)}
-        className="border rounded p-2"
-      >
-        {categorias.map((cat) => (
-          <option key={cat} value={cat}>{cat}</option>
-        ))}
-      </select>
-
-      {/* Campo fecha */}
-      <div className="flex flex-col gap-1">
-        <input
-          type="date"
-          value={fecha}
-          onChange={(e) => setFecha(e.target.value)}
-          onKeyDown={(e) => {
-    if (e.key === 'e' || e.key === 'E' || e.key === '-' || e.key === '+') {
-      e.preventDefault()
-    }}}
-          className="border rounded p-2"
-        />
-        {/* Si hay error en fecha lo mostramos en rojo */}
-        {errores.fecha !== '' && (
-          <p className="text-red-500 text-sm">{errores.fecha}</p>
-        )}
-      </div>
-
-      {/* Campo descripción — opcional */}
-      <input
-        type="text"
-        placeholder="Descripción (opcional)"
-        value={descripcion}
-        onChange={(e) => setDescripcion(e.target.value)}
-        className="border rounded p-2"
-      />
 
       <button
         type="submit"
-        className="bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+        className="bg-blue-800 text-white rounded-lg py-2.5 text-sm font-medium hover:bg-blue-900 transition-all"
       >
         {gastoEditar ? 'Guardar cambios' : 'Añadir gasto'}
       </button>
-
     </form>
   )
 }
