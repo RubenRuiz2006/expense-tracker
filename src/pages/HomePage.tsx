@@ -49,7 +49,7 @@ export default function HomePage() {
       <GastoForm onGuardar={handleGuardar} gastoEditar={gastoEditar} />
 
       {/* Filtros de categoría */}
-      <div className="flex gap-2 flex-wrap">
+      <div className="grid grid-cols-4 gap-2">
         <button
           onClick={() => setFiltro('todos')}
           className={`px-4 py-1.5 rounded-full text-xs font-medium transition-all ${
