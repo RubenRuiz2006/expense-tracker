@@ -7,12 +7,12 @@ import GastoList from '../components/GastoList'
 const categorias: Categoria[] = ['Comida', 'Transporte', 'Ocio', 'Ropa', 'Salud', 'Otros']
 
 const coloresFiltro: Record<string, string> = {
-  comida: 'bg-blue-50 text-blue-800',
-  transporte: 'bg-green-50 text-green-800',
-  ocio: 'bg-purple-50 text-purple-800',
-  ropa: 'bg-pink-50 text-pink-800',
-  salud: 'bg-teal-50 text-teal-800',
-  otros: 'bg-gray-100 text-gray-700',
+  Comida: 'bg-blue-50 text-blue-800',
+  Transporte: 'bg-green-50 text-green-800',
+  Ocio: 'bg-purple-50 text-purple-800',
+  Ropa: 'bg-pink-50 text-pink-800',
+  Salud: 'bg-teal-50 text-teal-800',
+  Otros: 'bg-gray-100 text-gray-700',
 }
 
 export default function HomePage() {
@@ -64,7 +64,7 @@ export default function HomePage() {
           <button
             key={cat}
             onClick={() => setFiltro(cat)}
-            className={`px-4 py-1.5 rounded-full text-xs font-medium capitalize transition-all ${
+            className={`px-4 py-1.5 rounded-full text-xs font-medium capitalize transition-all cursor-pointer ${
               filtro === cat
                 ? 'bg-blue-800 text-white'
                 : `${coloresFiltro[cat]} hover:opacity-80`

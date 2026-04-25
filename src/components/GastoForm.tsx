@@ -131,7 +131,7 @@ export default function GastoForm({ onGuardar, gastoEditar }: Props) {
 
       <button
         type="submit"
-        className="bg-blue-800 text-white rounded-lg py-2.5 text-sm font-medium hover:bg-blue-900 transition-all"
+        className="bg-blue-800 text-white rounded-lg py-2.5 text-sm font-medium hover:bg-blue-900 transition-all cursor-pointer"
       >
         {gastoEditar ? 'Guardar cambios' : 'Añadir gasto'}
       </button>
