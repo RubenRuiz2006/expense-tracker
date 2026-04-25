@@ -23,7 +23,6 @@ export default function HomePage() {
   function handleGuardar(gasto: Gasto) {
     guardarGasto(gasto)
     setGastoEditar(undefined)
-    // Al guardar reseteamos el filtro a todos
     setFiltro('todos')
   }
 
@@ -31,7 +30,6 @@ export default function HomePage() {
     setGastoEditar(gasto)
   }
 
-  // Filtramos los gastos según la categoría seleccionada
   const gastosFiltrados = filtro === 'todos'
     ? gastos
     : gastos.filter((g) => g.categoria === filtro)
@@ -48,31 +46,44 @@ export default function HomePage() {
     <div className="max-w-2xl mx-auto p-6 flex flex-col gap-4">
       <GastoForm onGuardar={handleGuardar} gastoEditar={gastoEditar} />
 
-      {/* Filtros de categoría */}
-      <div className="grid grid-cols-7 gap-2">
+      <div className="grid grid-cols-4 gap-2">
         <button
           onClick={() => setFiltro('todos')}
-          className={`px-4 py-1.5 rounded-full text-xs font-medium transition-all ${
+          className={`px-4 py-1.5 rounded-full text-xs font-medium transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
             filtro === 'todos'
               ? 'bg-blue-800 text-white'
               : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
           }`}
         >
           Todos
+          <span className={`text-xs rounded-full px-1.5 py-0.5 font-medium ${
+            filtro === 'todos' ? 'bg-white/20 text-white' : 'bg-gray-200 text-gray-500'
+          }`}>
+            {gastos.length}
+          </span>
         </button>
-        {categorias.map((cat) => (
-          <button
-            key={cat}
-            onClick={() => setFiltro(cat)}
-            className={`px-4 py-1.5 rounded-full text-xs font-medium capitalize transition-all cursor-pointer ${
-              filtro === cat
-                ? 'bg-blue-800 text-white'
-                : `${coloresFiltro[cat]} hover:opacity-80`
-            }`}
-          >
-            {cat}
-          </button>
-        ))}
+
+        {categorias.map((cat) => {
+          const cantidad = gastos.filter((g) => g.categoria === cat).length
+          return (
+            <button
+              key={cat}
+              onClick={() => setFiltro(cat)}
+              className={`px-4 py-1.5 rounded-full text-xs font-medium capitalize transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
+                filtro === cat
+                  ? 'bg-blue-800 text-white'
+                  : `${coloresFiltro[cat]} hover:opacity-80`
+              }`}
+            >
+              {cat}
+              <span className={`text-xs rounded-full px-1.5 py-0.5 font-medium ${
+                filtro === cat ? 'bg-white/20 text-white' : 'bg-black/10'
+              }`}>
+                {cantidad}
+              </span>
+            </button>
+          )
+        })}
       </div>
 
       <GastoList
