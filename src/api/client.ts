@@ -1,7 +1,6 @@
 import type { Gasto } from '../types/gasto'
 
-const URL_BASE = 'https://expense-tracker-xxhn.vercel.app/api/v1/gastos'
-
+const URL_BASE = import.meta.env.VITE_API_URL
 // Obtiene todos los gastos del servidor
 async function obtenerGastos(): Promise<Gasto[]> {
   const respuesta = await fetch(URL_BASE)
