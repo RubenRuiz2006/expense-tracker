@@ -1,10 +1,10 @@
 export type Categoria =
-  | 'comida'
-  | 'transporte'
-  | 'ocio'
-  | 'ropa'
-  | 'salud'
-  | 'otros'
+  | 'Comida'
+  | 'Transporte'
+  | 'Ocio'
+  | 'Ropa'
+  | 'Salud'
+  | 'Otros'
 
 export interface Gasto {
   id: string
